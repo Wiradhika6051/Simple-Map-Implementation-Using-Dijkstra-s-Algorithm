@@ -9,16 +9,28 @@ import java.util.*;
 public class DjikstraAlgorithm {
     private int iteration;
     private SimpleWeightedGraph<String, DefaultWeightedEdge> graph;
-    private Map<String,String[]> distanceMap;
+    private Map<String,String> distanceMap;
     private long startTime;
     private long endTime;
     public DjikstraAlgorithm(SimpleWeightedGraph<String, DefaultWeightedEdge> graph){
         this.graph = graph;
         this.startTime = System.nanoTime();
     }
-    public String[] solve(String startNode, String endNode){
+    public Deque<String> solve(String startNode, String endNode){
         setupTable(startNode);
-        return distanceMap.get(endNode);
+        return constructSolution(startNode,endNode);
+    }
+    public Deque<String> constructSolution(String startNode,String endNode){
+        //return
+        Deque<String> daftarNode = new LinkedList<>();
+        String selectedNode;
+        selectedNode = endNode;
+        do{
+            daftarNode.addFirst(selectedNode);
+            selectedNode = distanceMap.get(selectedNode);
+        }while(selectedNode!=null);
+        this.endTime = System.nanoTime();
+        return daftarNode;
     }
     public int getIterations(){
         return this.iteration;
@@ -27,6 +39,7 @@ public class DjikstraAlgorithm {
         distanceMap = new HashMap<>();
         iteration = 1;
         Set<String> nodeSet = this.graph.vertexSet();
+        String selectedNode = startNode;
         //isi prio queue isi node node
         PriorityQueue<Nodes> pq = new PriorityQueue<Nodes>(nodeSet.size(),new NodesComparator());
         for(String node:nodeSet){
@@ -37,6 +50,17 @@ public class DjikstraAlgorithm {
             else{
                 pq.add(new Nodes(node,Double.POSITIVE_INFINITY));
             }
+            distanceMap.put(node,null);
+        }
+        //iterasi algoritma djikstra
+        while(nodeSet.size()>0){
+
+
+
+
+
+            iteration++;
+            nodeSet.remove(selectedNode);
         }
 
     }
