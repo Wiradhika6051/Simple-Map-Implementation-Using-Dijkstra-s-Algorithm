@@ -1,0 +1,12 @@
+# format nama file: harus txt, boleh ada spasi
+# tulis jumlah node
+3
+# list nama node, tidak boleh ada spasi
+Aceh
+B
+C
+#list jumlah edge
+5
+# list edge(format: "kota1 kota2 weight")
+Aceh B 10
+B C 20
