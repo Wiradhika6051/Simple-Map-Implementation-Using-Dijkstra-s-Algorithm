@@ -29,5 +29,20 @@ public class Main {
             sv.forEach((e)->System.out.println(e));
         }
         System.out.println(graph.getEdgeWeight(graph.getEdge("B","C")));
+        //pilih vertex mana yang ingin dicari (edge start)
+        String[] vertexArray = new String[sv.size()];
+        sv.toArray(vertexArray);
+        System.out.println("Pilih vertex yang ingin dipilih sebagai start vertex:");
+        for(int i=0;i<vertexArray.length;i++){
+            System.out.println((i+1)+"."+vertexArray[i]);
+        }
+        int startVertex = sc.nextInt();
+        System.out.println("Pilih vertex yang ingin dipilih sebagai end vertex:");
+        for(int i=0;i<vertexArray.length;i++){
+            if(i!=startVertex) {
+                System.out.println((i+1) + "." + vertexArray[i]);
+            }
+        }
+        int endVertex  = sc.nextInt();
     }
 }

@@ -63,6 +63,10 @@ public class Parser {
                                 System.out.println(token[0]+","+token[1]+","+token[2]);
                                 edge = g.addEdge(token[0],token[1]);
                                 //set weight
+                                Double weight = Double.parseDouble(token[2]);
+                                if(weight<0){
+                                    throw new Exception("Weight tidak boleh negatif!!");
+                                }
                                 g.setEdgeWeight(edge,Double.parseDouble(token[2]));
                             }
                         }
