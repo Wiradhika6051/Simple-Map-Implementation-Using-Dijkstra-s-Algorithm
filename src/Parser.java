@@ -86,20 +86,24 @@ public class Parser {
                     }
                 }
             }while(line!=null);
-            return g;
+            System.out.println("lewatkah?");
         }
         catch(FileNotFoundException fnf){
             System.out.println("File "+this.path+" tidak ditemukan di folder test!");
+            System.out.println("ehe 2!?");
         }
         catch(IOException ioe){
             System.out.println("File kosong!");
+            System.out.println("ehe matamu2!?");
         }
         catch(NumberFormatException nfe){
+            System.out.println("ehe matamu1!?");
             System.out.println("Jumlah node/edge yang didefinisikan tidak sama dengan daftar node dan edge yang ada");
         }
         catch(Exception e){
+            System.out.println("ehe matamu!?");
             System.out.println(e.getMessage());
         }
-        return null;
+        return g;
     }
 }
