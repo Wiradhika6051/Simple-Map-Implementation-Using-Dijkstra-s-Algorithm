@@ -2,8 +2,10 @@ import algorithm.DjikstraAlgorithm;
 import gui.Visualizer;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import javax.swing.*;
 import java.util.Deque;
 import java.util.Scanner;
 import java.util.Set;
@@ -19,6 +21,16 @@ public class Main {
         String filepath = sc.nextLine();
         Parser parser = new Parser(filepath);
         SimpleWeightedGraph<String, DefaultWeightedEdge> graph = parser.parse();
+        Visualizer visualizer = new Visualizer(graph);
+        JFrame frame = new JFrame();
+        frame.getContentPane().add(visualizer);
+        //frame.getContentPane().add(applet);
+        frame.setTitle("Pathfinder D-2000");
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+        /*
         if(graph == null){
             System.out.println("Lah kosong?");
         }
@@ -56,5 +68,8 @@ public class Main {
         for (String node:solusi){
             System.out.println("-"+node);
         }
+        */
+
     }
+
 }

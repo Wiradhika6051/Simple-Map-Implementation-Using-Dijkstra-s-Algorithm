@@ -1,5 +1,6 @@
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.io.*;
