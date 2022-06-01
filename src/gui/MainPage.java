@@ -119,10 +119,10 @@ public class MainPage extends JFrame {
         //visualizer
         this.graph = new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
         this.visualizer = new Visualizer(graph);
-        this.visualizer.setBounds(getFractionSize(frameWidth,12,40),
+        this.visualizer.setBounds(getFractionSize(frameWidth,11,40),
                 getFractionSize(frameHeight,1,40),
-                getFractionSize(frameWidth,20,40),
-                getFractionSize(frameHeight,20,40)
+                getFractionSize(frameWidth,28,40),
+                getFractionSize(frameHeight,28,40)
         );
         add(visualizer);
         //run
