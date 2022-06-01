@@ -1,3 +1,5 @@
+package utils;
+
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
@@ -6,11 +8,10 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import java.io.*;
 
 public class Parser {
-    private final String path;
     private File file;
 
-    public Parser(String path){
-        this.path = path;
+    public Parser(File file){
+        this.file = file;
     }
     public SimpleWeightedGraph<String, DefaultWeightedEdge> parse(){
         BufferedReader reader;
@@ -22,8 +23,8 @@ public class Parser {
         SimpleWeightedGraph<String, DefaultWeightedEdge> g = new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
         DefaultWeightedEdge edge;
         try{
-            file = new File("test/"+this.path);
-            System.out.println("test/"+this.path);
+           // file = new File("test/"+this.path);
+            //System.out.println("test/"+this.path);
             reader = new BufferedReader(new FileReader(this.file));
             do {
                 line = reader.readLine();
@@ -95,10 +96,6 @@ public class Parser {
                 }
             }while(line!=null);
             System.out.println("lewatkah?");
-        }
-        catch(FileNotFoundException fnf){
-            System.out.println("File "+this.path+" tidak ditemukan di folder test!");
-            System.out.println("ehe 2!?");
         }
         catch(IOException ioe){
             System.out.println("File kosong!");
