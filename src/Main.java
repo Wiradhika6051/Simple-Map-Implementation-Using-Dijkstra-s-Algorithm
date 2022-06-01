@@ -30,7 +30,7 @@ public class Main {
         else{
             sv.forEach((e)->System.out.println(e));
         }
-        System.out.println(graph.getEdgeWeight(graph.getEdge("B","C")));
+     //   System.out.println(graph.getEdgeWeight(graph.getEdge("B","C")));
         //pilih vertex mana yang ingin dicari (edge start)
         String[] vertexArray = new String[sv.size()];
         sv.toArray(vertexArray);
@@ -49,7 +49,10 @@ public class Main {
       //  int endVertex  = sc.nextInt();
         //cari jawaban
         DjikstraAlgorithm da = new DjikstraAlgorithm(graph);
-        Deque<String> solusi = da.solve("Aceh","C");
+        //Deque<String> solusi = da.solve("Aceh","C");
+        //Deque<String> solusi = da.solve("a","z");
+        Deque<String> solusi = da.solve("A","C");
+
         for (String node:solusi){
             System.out.println("-"+node);
         }

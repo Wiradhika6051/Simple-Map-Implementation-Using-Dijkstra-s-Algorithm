@@ -1,0 +1,17 @@
+6
+a
+b
+c
+d
+e
+z
+9
+a b 4
+a c 2
+b c 1
+b d 5
+c d 8
+c e 10
+d e 2
+e z 3
+d z 6
