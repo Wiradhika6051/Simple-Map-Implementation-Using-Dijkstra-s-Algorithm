@@ -24,13 +24,24 @@ public class MainPage extends JFrame {
     //private JLabel judul;
     private JLabel uploadLabel;
     private JLabel fileName;
+    private JLabel analysisLabel;
+    private JLabel runLabel;
+    private JLabel runtimeLabel;
+    private JLabel iterationsLabel;
     private JButton uploadButton;
+    private JButton runButton;
     private static final Dimension DEFAULT_SIZE = new Dimension(530, 600);
     private GridBagConstraints gbc;
     private static MainPage parentFrame;
     private int frameWidth;
     private int frameHeight;
     private boolean debugMode;
+    public String namafile;
+    private DjikstraAlgorithm da;
+    Deque<String> solusi;
+    String startNode;
+    String endNode;
+
     private static final Font TITLE_FONT = new Font("Serif", Font.BOLD,20);
     //test
     //private mxIGraphLayout layout;
@@ -42,6 +53,8 @@ public class MainPage extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.debugMode = true;
+
+        this.da = null;
 
        // this.setUndecorated(true);->ngilangin panel atas buat close
         this.setResizable(false);
@@ -80,7 +93,9 @@ public class MainPage extends JFrame {
                     File selectedFile = fileChooser.getSelectedFile();
                     Parser parser = new Parser(selectedFile);
                     parentFrame.graph = parser.parse();
-                    parentFrame.fileName.setText(selectedFile.getName());
+                    parentFrame.namafile = selectedFile.getName();
+                    parentFrame.fileName.setText(parentFrame.namafile);
+                    parentFrame.runButton.setEnabled(true);
                     parentFrame.visualizer.update(parentFrame.graph);
                 }
             }
@@ -93,13 +108,81 @@ public class MainPage extends JFrame {
                 );
         add(uploadButton);
         //filename
-        this.fileName = new JLabel("");
+        this.namafile = "";
+        this.fileName = new JLabel(namafile);
         this.fileName.setBounds(getFractionSize(frameWidth,1,40),
                 getFractionSize(frameHeight,4.5,40),
                 getFractionSize(frameWidth,5,40),
                 getFractionSize(frameHeight,2,40)
         );
         add(fileName);
+        //visualizer
+        this.graph = new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+        this.visualizer = new Visualizer(graph);
+        this.visualizer.setBounds(getFractionSize(frameWidth,12,40),
+                getFractionSize(frameHeight,1,40),
+                getFractionSize(frameWidth,20,40),
+                getFractionSize(frameHeight,20,40)
+        );
+        add(visualizer);
+        //run
+        //label
+        this.runLabel = new JLabel("JALANKAN PROGRAM");
+        this.runLabel.setFont(TITLE_FONT);
+        this.runLabel.setBounds(getFractionSize(frameWidth,0.5,40),
+                getFractionSize(frameHeight,6,40),
+                getFractionSize(frameWidth,7,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        this.add(this.runLabel);
+        //run button
+        this.runButton = new JButton("RUN");
+        this.runButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parentFrame.da = new DjikstraAlgorithm(parentFrame.graph);
+                parentFrame.solusi = da.solve(startNode,endNode);
+                parentFrame.runtimeLabel.setText("Total Waktu: "+da.getTime());
+                parentFrame.iterationsLabel.setText("Jumlah Iterasi: "+da.getIterations());
+            }
+        }
+        );
+        this.runButton.setBounds(getFractionSize(frameWidth,1,40),
+                getFractionSize(frameHeight,8,40),
+                getFractionSize(frameWidth,5,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        //cek apakah udah dimuat belum filenya
+        if(this.namafile.equals("")){
+            this.runButton.setEnabled(false);
+        }
+        add(runButton);
+        //analisis
+        //label
+        this.analysisLabel = new JLabel("RUNTIME STATISTIC");
+        this.analysisLabel.setFont(TITLE_FONT);
+        this.analysisLabel.setBounds(getFractionSize(frameWidth,0.6,40),
+                getFractionSize(frameHeight,11,40),
+                getFractionSize(frameWidth,7,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        this.add(this.analysisLabel);
+        //waktu pengerjaan
+        this.runtimeLabel = new JLabel("Total Waktu:");
+        this.runtimeLabel.setBounds(getFractionSize(frameWidth,1,40),
+                getFractionSize(frameHeight,12,40),
+                getFractionSize(frameWidth,7,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        this.add(this.runtimeLabel);
+        //jumlah iterasi
+        this.iterationsLabel = new JLabel("Jumlah Iterasi:");
+        this.iterationsLabel.setBounds(getFractionSize(frameWidth,1,40),
+                getFractionSize(frameHeight,13,40),
+                getFractionSize(frameWidth,7,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        this.add(this.iterationsLabel);
     }
     private int getFractionSize(double base,double pembilang,double penyebut){
         return (int)(base*((1.0*pembilang)/penyebut));
@@ -112,10 +195,10 @@ public class MainPage extends JFrame {
                 label.setBounds((int) (this.frameWidth * (i / 40.0)), 200, 50, 50);
                 add(label);
             }
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 40; i++) {
                 JLabel label = new JLabel(Integer.toString(i));
-                System.out.println((int) (this.frameHeight * (i / 20.0) - this.frameHeight / 34.0));
-                label.setBounds(470, (int) (this.frameHeight * (i / 20.0) - this.frameHeight / 34.0), 50, 50);
+                System.out.println((int) (this.frameHeight * (i / 40.0) - this.frameHeight / 34.0));
+                label.setBounds(470, (int) (this.frameHeight * (i / 40.0) - this.frameHeight / 34.0), 50, 50);
                 add(label);
             }
         }
