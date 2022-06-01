@@ -26,6 +26,7 @@ public class Parser {
             reader = new BufferedReader(new FileReader(this.file));
             do {
                 line = reader.readLine();
+                line.replaceAll("\n","");
                 if(line.charAt(0)!='#' && line!=null){
                     //bukan komentar
                     token = line.split(" ");
@@ -49,6 +50,7 @@ public class Parser {
                             for(int i =0;i<edgeCount;i++){
                                 do{
                                     line = reader.readLine();
+                                    line.replaceAll("\n","");
                                 }while(line.charAt(0)=='#' && line!=null);
                                 if(line==null){
                                     throw new Exception("Jumlah edge yang dideclare dan di daftar berbeda");
@@ -74,6 +76,7 @@ public class Parser {
                             for(int i =0;i<nodeCount;i++){
                                 do{
                                     line = reader.readLine();
+                                    line.replaceAll("\n","");
                                 }while(line.charAt(0)=='#' && line!=null);
                                 if(line==null){
                                     throw new Exception("Jumlah node yang dideclare dan di daftar berbeda");

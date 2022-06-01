@@ -6,7 +6,8 @@ Aceh
 B
 C
 #list jumlah edge
-5
+3
 # list edge(format: "kota1 kota2 weight")
 Aceh B 10
 B C 20
+Aceh C 20

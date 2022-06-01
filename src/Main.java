@@ -1,8 +1,10 @@
+import algorithm.DjikstraAlgorithm;
 import gui.Visualizer;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import java.util.Deque;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -36,13 +38,20 @@ public class Main {
         for(int i=0;i<vertexArray.length;i++){
             System.out.println((i+1)+"."+vertexArray[i]);
         }
-        int startVertex = sc.nextInt();
+      //  int startVertex = sc.nextInt();
+      //  String start = vertexArray[startVertex-1];
         System.out.println("Pilih vertex yang ingin dipilih sebagai end vertex:");
         for(int i=0;i<vertexArray.length;i++){
-            if(i!=startVertex) {
+    //        if(i!=startVertex) {
                 System.out.println((i+1) + "." + vertexArray[i]);
-            }
+      //      }
         }
-        int endVertex  = sc.nextInt();
+      //  int endVertex  = sc.nextInt();
+        //cari jawaban
+        DjikstraAlgorithm da = new DjikstraAlgorithm(graph);
+        Deque<String> solusi = da.solve("Aceh","C");
+        for (String node:solusi){
+            System.out.println("-"+node);
+        }
     }
 }
