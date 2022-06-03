@@ -3,6 +3,7 @@ package gui;
 import algorithm.DjikstraAlgorithm;
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -169,6 +170,8 @@ public class MainPage extends JFrame {
                 parentFrame.solusi = da.solve(startNode,endNode);
                 parentFrame.runtimeLabel.setText("Total Waktu: "+da.getTime());
                 parentFrame.iterationsLabel.setText("Jumlah Iterasi: "+da.getIterations());
+                //update graf
+                parentFrame.updateGraf();
             }
         }
         );
@@ -291,6 +294,17 @@ public class MainPage extends JFrame {
         this.add(visualizer, gbc);
 
     }
+    public void updateGraf(){
+        //hapus elemen pertama sama terakhir
+        this.solusi.removeFirst();
+        this.solusi.removeLast();
+        //ganti warna elemen antara
+        for(String nama:solusi){
+            this.visualizer.updateCell(nama,"ffff00","1A1AFF");
+        }
+    }
+
+
 }
 
 

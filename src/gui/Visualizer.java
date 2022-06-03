@@ -382,6 +382,23 @@ public class Visualizer extends JPanel {
         //initGUI();
         initializeGUI();
     }
+    public mxCell getVertex(String name){
+        jgxAdapter.clearSelection();
+        jgxAdapter.selectAll();
+        Object[] cells = jgxAdapter.getSelectionCells();
+        for(Object c:cells){
+            mxCell cell = (mxCell) c;
+            if(cell.getValue().equals(name)){
+                return cell;
+            }
+        }
+        return null;
+    }
+    public void updateCell(String name,String color,String fontColor){
+        mxCell cell = getVertex(name);
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,fontColor,new Object[]{cell});//fontcolor biru
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,color,new Object[]{cell});//bg hijau
+    }
 }/*
     private void uncolorSingleVertex(String label) {
     List<String> nodes = new List<>();
