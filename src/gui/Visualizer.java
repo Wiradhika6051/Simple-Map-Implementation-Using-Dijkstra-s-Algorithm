@@ -250,17 +250,41 @@ public class Visualizer extends JPanel {
                 if(cell != null)
                 {
                     if(cell.isVertex()){
-                        if(MainPage.getInstance().getStartNode()==null && MainPage.getInstance().getEndNode()==null){
-                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"ffffff",new Object[]{cell});
-                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"0000ff",new Object[]{cell});
+                        boolean isStartNodeSelected = MainPage.getInstance().getStartNode()!=null;
+                        boolean isEndNodeSelected = MainPage.getInstance().getEndNode()!=null;
+                        String startNode = MainPage.getInstance().getStartNode();
+                        String endNode = MainPage.getInstance().getEndNode();
+                        if(!isStartNodeSelected && !isEndNodeSelected){
+                            //pilih start node
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"ffffff",new Object[]{cell});//fontcolor hitam
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"0000ff",new Object[]{cell});// bg biru
                             MainPage.getInstance().setStartNode(cell.getValue().toString());
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
                         }
-                        else if(MainPage.getInstance().getStartNode()!=null && MainPage.getInstance().getEndNode()==null && cell.getValue().toString().equals(MainPage.getInstance().getStartNode())){
-                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"000000",new Object[]{cell});
-                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});
+                        else if(isStartNodeSelected && !isEndNodeSelected && cell.getValue().toString().equals(startNode)){
+                            //batal pilih start node
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"000000",new Object[]{cell});//fontcolor putih
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});//bg abu abu
                             MainPage.getInstance().setStartNode(null);
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                        }
+                        else if(isStartNodeSelected&& !isEndNodeSelected && !cell.getValue().toString().equals(startNode)){
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"0000CC",new Object[]{cell});//fontcolor biru
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"00ff00",new Object[]{cell});//bg hijau
+                            MainPage.getInstance().setEndNode(cell.getValue().toString());
+                            System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                        }
+                        else if(isStartNodeSelected&& isEndNodeSelected && cell.getValue().toString().equals(endNode)){
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"000000",new Object[]{cell});//fontcolor putih
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});//bg abu abu
+                            MainPage.getInstance().setEndNode(null);
+                            System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                        }
+                        //cek apakah startNode dan endNode nya dah ada, kalau ada aktifin run button
+                        startNode = MainPage.getInstance().getStartNode();
+                        endNode = MainPage.getInstance().getEndNode();
+                        if(startNode!=null && endNode!=null) {
+                            MainPage.getInstance().runButton.setEnabled(true);
                         }
                     }
                 }

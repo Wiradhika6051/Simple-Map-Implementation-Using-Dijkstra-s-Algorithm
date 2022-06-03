@@ -30,7 +30,7 @@ public class MainPage extends JFrame {
     private JLabel runtimeLabel;
     private JLabel iterationsLabel;
     private JButton uploadButton;
-    private JButton runButton;
+    public JButton runButton;
     private static final Dimension DEFAULT_SIZE = new Dimension(530, 600);
     private GridBagConstraints gbc;
     private static MainPage parentFrame;
@@ -110,10 +110,12 @@ public class MainPage extends JFrame {
                 if(result==JFileChooser.APPROVE_OPTION){
                     File selectedFile = fileChooser.getSelectedFile();
                     Parser parser = new Parser(selectedFile);
+                    parentFrame.startNode = null;
+                    parentFrame.endNode = null;
                     parentFrame.graph = parser.parse();
                     parentFrame.namafile = selectedFile.getName();
                     parentFrame.fileName.setText(parentFrame.namafile);
-                    parentFrame.runButton.setEnabled(true);
+                    parentFrame.runButton.setEnabled(false);
                     parentFrame.visualizer.update(parentFrame.graph);
                     parentFrame.visualizer.setBounds(getFractionSize(frameWidth,11,40),
                             getFractionSize(frameHeight,1,40),
