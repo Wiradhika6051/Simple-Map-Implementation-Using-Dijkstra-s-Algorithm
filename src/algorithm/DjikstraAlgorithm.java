@@ -3,18 +3,19 @@ package algorithm;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import utils.EdgeAdaptor;
 
 import java.text.DecimalFormat;
 import java.util.*;
 
 public class DjikstraAlgorithm {
     private int iteration;
-    private SimpleWeightedGraph<String, DefaultWeightedEdge> graph;
+    private SimpleWeightedGraph<String, EdgeAdaptor> graph;
     private Map<String,String> distanceMap;
     private long startTime;
     private long endTime;
     private PriorityQueue<Nodes> pq;
-    public DjikstraAlgorithm(SimpleWeightedGraph<String, DefaultWeightedEdge> graph){
+    public DjikstraAlgorithm(SimpleWeightedGraph<String, EdgeAdaptor> graph){
         this.graph = graph;
         this.startTime = System.nanoTime();
     }

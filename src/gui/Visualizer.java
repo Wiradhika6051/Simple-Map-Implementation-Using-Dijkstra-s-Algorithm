@@ -6,6 +6,8 @@ import com.mxgraph.swing.mxGraphComponent;
 import org.jgrapht.*;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.*;
+import utils.EdgeAdaptor;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -13,14 +15,14 @@ import java.util.*;
 import java.util.List;
 
 public class Visualizer extends JPanel {
-    SimpleWeightedGraph<String, DefaultWeightedEdge> graph;
+    SimpleWeightedGraph<String, EdgeAdaptor> graph;
     private static final Dimension DEFAULT_SIZE = new Dimension(400, 320);
-    private JGraphXAdapter<String, DefaultWeightedEdge> jgxAdapter;
+    private JGraphXAdapter<String, EdgeAdaptor> jgxAdapter;
     private String[][] locationMatrix;
     private int arraySize;
     private GraphCanvas canvas;
 
-    public Visualizer(SimpleWeightedGraph<String, DefaultWeightedEdge> graph){
+    public Visualizer(SimpleWeightedGraph<String, EdgeAdaptor> graph){
         this.graph = graph;
         this.setBackground(Color.WHITE);
         //initGUI();
@@ -243,9 +245,10 @@ public class Visualizer extends JPanel {
         //layout.setY0(panelLeftBorder);
         layout.execute(jgxAdapter.getDefaultParent());
     }
-    public void update(SimpleWeightedGraph<String, DefaultWeightedEdge> graph){
+    public void update(SimpleWeightedGraph<String, EdgeAdaptor> graph){
         this.graph = graph;
         this.removeAll();
-        initGUI();
+        //initGUI();
+        initializeGUI();
     }
 }

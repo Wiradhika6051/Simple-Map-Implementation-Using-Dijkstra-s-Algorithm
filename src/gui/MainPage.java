@@ -7,6 +7,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import utils.EdgeAdaptor;
 import utils.Parser;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.io.File;
 import java.util.Deque;
 
 public class MainPage extends JFrame {
-    private SimpleWeightedGraph<String, DefaultWeightedEdge> graph;
+    private SimpleWeightedGraph<String, EdgeAdaptor> graph;
     private Visualizer visualizer;
     //private JLabel judul;
     private JLabel uploadLabel;
@@ -117,7 +118,7 @@ public class MainPage extends JFrame {
         );
         add(fileName);
         //visualizer
-        this.graph = new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+        this.graph = new SimpleWeightedGraph<String, EdgeAdaptor>(EdgeAdaptor.class);
         this.visualizer = new Visualizer(graph);
         this.visualizer.setBounds(getFractionSize(frameWidth,11,40),
                 getFractionSize(frameHeight,1,40),
@@ -245,7 +246,7 @@ public class MainPage extends JFrame {
         this.add(fileName, gbc);
         //baris 3
         //visualizer
-        this.graph = new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+        this.graph = new SimpleWeightedGraph<String, EdgeAdaptor>(EdgeAdaptor.class);
         this.visualizer = new Visualizer(graph);
         //test
         /*

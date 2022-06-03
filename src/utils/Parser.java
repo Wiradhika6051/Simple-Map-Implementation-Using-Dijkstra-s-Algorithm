@@ -13,15 +13,15 @@ public class Parser {
     public Parser(File file){
         this.file = file;
     }
-    public SimpleWeightedGraph<String, DefaultWeightedEdge> parse(){
+    public SimpleWeightedGraph<String, EdgeAdaptor> parse(){
         BufferedReader reader;
         String line;
         int nodeCount = -1;//diinisialisasi dengan -1
         int edgeCount = -1;
         int tempConvert;
         String[] token;
-        SimpleWeightedGraph<String, DefaultWeightedEdge> g = new SimpleWeightedGraph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
-        DefaultWeightedEdge edge;
+        SimpleWeightedGraph<String, EdgeAdaptor> g = new SimpleWeightedGraph<String, EdgeAdaptor>(EdgeAdaptor.class);
+        EdgeAdaptor edge;
         try{
            // file = new File("test/"+this.path);
             //System.out.println("test/"+this.path);
