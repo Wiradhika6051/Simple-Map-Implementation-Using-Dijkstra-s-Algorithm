@@ -1,15 +1,26 @@
 package gui;
 import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxFastOrganicLayout;
 import com.mxgraph.layout.mxIGraphLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource;
+import com.mxgraph.view.mxGraphSelectionModel;
+import com.mxgraph.view.mxStylesheet;
 import org.jgrapht.*;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.*;
+import utils.CustomJGraphXAdapter;
 import utils.EdgeAdaptor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.*;
 import java.util.List;
@@ -17,14 +28,17 @@ import java.util.List;
 public class Visualizer extends JPanel {
     SimpleWeightedGraph<String, EdgeAdaptor> graph;
     private static final Dimension DEFAULT_SIZE = new Dimension(400, 320);
-    private JGraphXAdapter<String, EdgeAdaptor> jgxAdapter;
+    private CustomJGraphXAdapter<String, EdgeAdaptor> jgxAdapter;
     private String[][] locationMatrix;
     private int arraySize;
     private GraphCanvas canvas;
+    public static Visualizer visualizer;
+    public mxGraphComponent component;
 
     public Visualizer(SimpleWeightedGraph<String, EdgeAdaptor> graph){
         this.graph = graph;
         this.setBackground(Color.WHITE);
+        visualizer = this;
         //initGUI();
         //initializeGUI();
     }
@@ -219,17 +233,63 @@ public class Visualizer extends JPanel {
     */
     private void initializeGUI(){
        // ListenableGraph<String, DefaultWeightedEdge> g = new ListenableUndirectedWeightedGraph<String, DefaultWeightedEdge>();
-        jgxAdapter = new JGraphXAdapter<>(this.graph);
+        jgxAdapter = new CustomJGraphXAdapter<>(this.graph);
         setPreferredSize(DEFAULT_SIZE);
         this.setSize(DEFAULT_SIZE);
         this.setBackground(Color.WHITE);
-        mxGraphComponent component = new mxGraphComponent(jgxAdapter);
+        component = new mxGraphComponent(jgxAdapter);
         component.getViewport().setOpaque(true);
         component.getViewport().setBackground(Color.WHITE);
         component.setBorder(BorderFactory.createEmptyBorder());
+        component.setDragEnabled(false);
+        component.setAutoExtend(true);
+        component.getGraphControl().addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mxCell cell =(mxCell) Visualizer.visualizer.component.getCellAt(e.getX(), e.getY());
+                if(cell != null)
+                {
+                    if(cell.isVertex()){
+                        if(MainPage.getInstance().getStartNode()==null && MainPage.getInstance().getEndNode()==null){
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"ffffff",new Object[]{cell});
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"0000ff",new Object[]{cell});
+                            MainPage.getInstance().setStartNode(cell.getValue().toString());
+                            System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                        }
+                        else if(MainPage.getInstance().getStartNode()!=null && MainPage.getInstance().getEndNode()==null && cell.getValue().toString().equals(MainPage.getInstance().getStartNode())){
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"000000",new Object[]{cell});
+                            jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});
+                            MainPage.getInstance().setStartNode(null);
+                            System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                        }
+                    }
+                }
+            }
+        });
+        /*
+        jgxAdapter.getSelectionModel().addListener(mxEvent.CHANGE, new mxEventSource.mxIEventListener() {
+            @Override
+            public void invoke(Object o, mxEventObject mxEventObject) {
+                mxGraphSelectionModel sm = (mxGraphSelectionModel) o;
+                mxCell cell = (mxCell) sm.getCell();
+                if (cell != null && cell.isVertex()) {
+
+                    if(MainPage.getInstance().getStartNode()==null && MainPage.getInstance().getEndNode()==null){
+                        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"ffffff",new Object[]{cell});
+                        jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"0000ff",new Object[]{cell});
+                        MainPage.getInstance().setStartNode(cell.getValue().toString());
+                        System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                    }
+                    jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"00ffff",new Object[]{cell});
+                    jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"ffffff",new Object[]{cell});
+
+                //MainPage.getInstance().setStartNode();
+            }
+        }});*/
+        //component.setEnabled(false);
         this.add(component);
         int radius = 100;
-        mxCircleLayout layout = new mxCircleLayout(jgxAdapter);
+        mxFastOrganicLayout layout = new mxFastOrganicLayout(jgxAdapter);
         //set geometry
         double panelVerticalPos = this.getY();
         System.out.println(panelVerticalPos);
@@ -243,6 +303,53 @@ public class Visualizer extends JPanel {
         );
         //layout.setX0(panelUpperBorder);
         //layout.setY0(panelLeftBorder);
+        jgxAdapter.getModel().beginUpdate();
+        try{
+           // jgxAdapter.setAlternateEdgeStyle();
+            //jgxAdapter.
+            jgxAdapter.clearSelection();
+            jgxAdapter.selectAll();
+            Object[] cells = jgxAdapter.getSelectionCells();
+            mxStylesheet stylesheet = jgxAdapter.getStylesheet();
+            jgxAdapter.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_EDGE,mxConstants.EDGESTYLE_LOOP);
+            //shape vertices
+            Hashtable<String,Object> style_v = new Hashtable<>();
+            style_v.put(mxConstants.STYLE_SHAPE,mxConstants.SHAPE_ACTOR);
+            stylesheet.putCellStyle("ROUNDED",style_v);
+            jgxAdapter.setAutoSizeCells(true);
+            jgxAdapter.setAllowDanglingEdges(false);
+            jgxAdapter.setCellsBendable(false);
+            jgxAdapter.setCellsDeletable(false);
+            jgxAdapter.setCellsLocked(false);
+            //shape edges
+            Hashtable<String,Object> style_e = new Hashtable<>();
+           // style_e.put(mxConstants.STYLE_SHAPE,mxConstants.);
+            stylesheet.putCellStyle("LINE EDGE",style_e);
+            //layout.setForceConstant(150);
+            for(Object c:cells){
+                mxCell cell = (mxCell) c;
+                mxGeometry geometry = cell.getGeometry();
+
+                if(cell.isVertex()){
+                    geometry.setWidth(60);
+                    geometry.setHeight(60);
+                    //cell.setStyle("ROUNDED");
+                    jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});
+                    jgxAdapter.setCellStyles(mxConstants.STYLE_SHAPE,mxConstants.SHAPE_ELLIPSE,new Object[]{cell});
+
+
+                }
+                else if(cell.isEdge()){
+                 //   cell.setStyle("LINE EDGE");
+                }
+
+               // mxConstants.
+             //   jgxAdapter.setCellsLocked(true);
+            }
+        }
+        finally{
+            jgxAdapter.getModel().endUpdate();
+        }
         layout.execute(jgxAdapter.getDefaultParent());
     }
     public void update(SimpleWeightedGraph<String, EdgeAdaptor> graph){
@@ -251,4 +358,18 @@ public class Visualizer extends JPanel {
         //initGUI();
         initializeGUI();
     }
-}
+}/*
+    private void uncolorSingleVertex(String label) {
+    List<String> nodes = new List<>();
+    }
+    for(int i=0; i<nodes.size(); i++) {
+        // keeps all the vertices
+         Object o = nodes.get(i);
+         if(graph.getModel().isVertex(o) && graph.getLabel(o).equals(label) )
+         {
+             mxCell vertex = (mxCell)o;
+             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#ffffff", new Object[]{vertex});
+
+         } } }
+*/
+        //}

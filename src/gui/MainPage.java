@@ -48,12 +48,29 @@ public class MainPage extends JFrame {
     //private mxIGraphLayout layout;
     //mxGraphComponent component;
     //private JGraphXAdapter<String, DefaultWeightedEdge> jgxAdapter;
+    public static  MainPage getInstance(){
+        return parentFrame;
+    }
+    public void setStartNode(String name){
+        this.startNode = name;
+        System.out.println(startNode);
+    }
+    public String getStartNode(){
+        return startNode;
+    }
+    public void setEndNode(String name){
+        this.endNode = name;
+        System.out.println(endNode);
+    }
+    public String getEndNode(){
+        return endNode;
+    }
     public MainPage(boolean debugMode){
        // this.setPreferredSize(DEFAULT_SIZE);
         this.setTitle("Pathfinder D-2000");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.debugMode = true;
+        this.debugMode = debugMode;
 
         this.da = null;
 
@@ -98,6 +115,11 @@ public class MainPage extends JFrame {
                     parentFrame.fileName.setText(parentFrame.namafile);
                     parentFrame.runButton.setEnabled(true);
                     parentFrame.visualizer.update(parentFrame.graph);
+                    parentFrame.visualizer.setBounds(getFractionSize(frameWidth,11,40),
+                            getFractionSize(frameHeight,1,40),
+                            getFractionSize(frameWidth,28,40),
+                            getFractionSize(frameHeight,28,40)
+                    );
                 }
             }
         }
