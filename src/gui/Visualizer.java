@@ -394,10 +394,16 @@ public class Visualizer extends JPanel {
         }
         return null;
     }
-    public void updateCell(String name,String color,String fontColor){
-        mxCell cell = getVertex(name);
-        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,fontColor,new Object[]{cell});//fontcolor biru
-        jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,color,new Object[]{cell});//bg hijau
+    public void updateCell(Object[] cells,String color,String fontColor){
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,fontColor,cells);//fontcolor
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,color,cells);//bg
+    }
+    public void updateEdge(Object[] edges,String color) {
+        jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, color, edges);//warna edge
+    }
+    public Object getEdge(String startNode,String endNode){
+        HashMap<EdgeAdaptor,com.mxgraph.model.mxICell> edgeToCellMap = jgxAdapter.getEdgeToCellMap();
+        return (Object)edgeToCellMap.get(this.graph.getEdge(startNode,endNode));
     }
 }/*
     private void uncolorSingleVertex(String label) {

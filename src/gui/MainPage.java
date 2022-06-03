@@ -296,12 +296,32 @@ public class MainPage extends JFrame {
     }
     public void updateGraf(){
         //hapus elemen pertama sama terakhir
-        this.solusi.removeFirst();
-        this.solusi.removeLast();
+        String startNode = this.solusi.removeFirst();
+        String endNode = this.solusi.removeLast();
         //ganti warna elemen antara
+        mxCell cell;
         for(String nama:solusi){
-            this.visualizer.updateCell(nama,"ffff00","1A1AFF");
+            cell = visualizer.getVertex(nama);
+            this.visualizer.updateCell(new Object[]{cell},"ffff00","1A1AFF");//kuning
         }
+        //ganti warna edge nya
+        //ganti untuk yang ngubungin startNode sama node selanjutnya
+
+        //inisialisasi array
+        Object[] highlitedPath = new Object[solusi.size()+1];
+        highlitedPath[0] = this.visualizer.getEdge(startNode,solusi.getFirst());
+        highlitedPath[solusi.size()] = this.visualizer.getEdge(solusi.getLast(),endNode);
+
+        int size = solusi.size()-1;
+        String current = solusi.size()>0? this.solusi.removeFirst():null;
+        String next = solusi.size()>0? this.solusi.removeFirst():null;
+        for(int i=0;i<size;i++){
+            if(current!=null && next!=null)
+                highlitedPath[i] = this.visualizer.getEdge(current,next);
+            current = next;
+            next = solusi.size()>0? this.solusi.removeFirst():null;
+        }
+        this.visualizer.updateEdge(highlitedPath,"ffff00");
     }
 
 
