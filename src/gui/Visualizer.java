@@ -300,12 +300,14 @@ public class Visualizer extends JPanel {
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
                         }
                         else if(isStartNodeSelected&& !isEndNodeSelected && !cell.getValue().toString().equals(startNode)){
+                            //pilih end node
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"0000CC",new Object[]{cell});//fontcolor biru
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"00ff00",new Object[]{cell});//bg hijau
                             MainPage.getInstance().setEndNode(cell.getValue().toString());
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
                         }
                         else if(isStartNodeSelected&& isEndNodeSelected && cell.getValue().toString().equals(endNode)){
+                            //batal pilih end node
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"000000",new Object[]{cell});//fontcolor putih
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});//bg abu abu
                             MainPage.getInstance().setEndNode(null);
@@ -433,6 +435,12 @@ public class Visualizer extends JPanel {
         }
         return null;
     }
+    public Object[] getAllCells(){
+        jgxAdapter.clearSelection();
+        jgxAdapter.selectAll();
+        Object[] cells = jgxAdapter.getSelectionCells();
+        return cells;
+    }
     public void updateCell(Object[] cells,String color,String fontColor){
         jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,fontColor,cells);//fontcolor
         jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,color,cells);//bg
@@ -445,6 +453,82 @@ public class Visualizer extends JPanel {
     public Object getEdge(String startNode,String endNode){
         HashMap<EdgeAdaptor,com.mxgraph.model.mxICell> edgeToCellMap = jgxAdapter.getEdgeToCellMap();
         return (Object)edgeToCellMap.get(this.graph.getEdge(startNode,endNode));
+    }
+    public void updateStartEndNode(String start,String end){//update start node
+        jgxAdapter.clearSelection();
+        jgxAdapter.selectAll();
+        //start node
+        mxCell cell = getVertex(start);
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"ffffff",new Object[]{cell});//fontcolor hitam
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"0000ff",new Object[]{cell});// bg biru
+        //end node
+        cell = getVertex(end);
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"0000CC",new Object[]{cell});//fontcolor biru
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"00ff00",new Object[]{cell});//bg hijau
+    }
+    public void resetGraphValue(){
+        Object[] cells = getAllCells();
+        //reset value di awal
+        for(Object c:cells){
+            mxCell cell = (mxCell) c;
+            String cell_old_value = ((String)cell.getValue());
+            for(int i =0;i<cell_old_value.length();i++){
+                System.out.println(cell_old_value.charAt(i));
+            }
+            int newline_pos = cell_old_value.indexOf('\n');
+            if(newline_pos!=-1) {
+                String new_value = cell_old_value.substring(0, newline_pos);
+                jgxAdapter.getModel().setValue(cell, new_value);
+            }
+            //cell.setValue(new_value);
+        }
+    }
+
+    public void renderStepGraph(Deque<String> histori_node,Map<String, Map<String,Double>> it_his,int counter){
+        resetGraphValue();
+        Map<String,Double> record;
+        //LinkedList<String> temp = (LinkedList<String>) histori_node.clone();
+        int idx=0;
+        String key=null;
+        if(histori_node==null){
+            System.out.println("Kok null?");
+        }
+        System.out.println(histori_node.size());
+        System.out.println("KOnter"+counter);
+        for(String node: histori_node){
+            if(idx==counter){
+                key = node;
+                break;
+            }
+            else{
+                idx++;
+            }
+            System.out.println(node);
+        }
+        System.out.println("key"+key);
+        record = it_his.get(key);
+        if(record==null){
+            System.out.println("napa kosong dah?");
+        }
+        for(String recKey:record.keySet()){
+            System.out.println(recKey);
+            mxCell cell = getVertex(recKey);
+            if(cell==null){
+                System.out.println("fanfare");
+            }
+            Double value = record.get(recKey);
+            String val=null;
+            if(value==Double.POSITIVE_INFINITY){
+                val = "∞";
+            }
+            else{
+                val = Double.toString(value);
+            }
+            String new_value = cell.getValue()+"\n"+val;
+            jgxAdapter.getModel().setValue(cell,new_value);
+            //cell.setValue(new_value);
+        }
+
     }
 }/*
     private void uncolorSingleVertex(String label) {

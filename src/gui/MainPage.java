@@ -5,6 +5,7 @@ import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -19,6 +20,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.File;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class MainPage extends JFrame {
@@ -34,6 +36,16 @@ public class MainPage extends JFrame {
     private JButton uploadButton;
     public JButton runButton;
     public JButton restartButton;
+    JLabel iterationLabel;
+    JButton nextButton;
+    JButton prevButton;
+    Deque<String> temp;
+    public int counter=0;
+
+    JLabel selectModeLabel;
+    JButton resultModeButton;
+    JButton historyModeButton;
+
     private static final Dimension DEFAULT_SIZE = new Dimension(530, 600);
     private GridBagConstraints gbc;
     private static MainPage parentFrame;
@@ -46,6 +58,7 @@ public class MainPage extends JFrame {
     String startNode;
     String endNode;
     public Map<String, Map<String,Double>> historyData;
+    public Deque<String> stepHistory;
 
     public static final Font TITLE_FONT = new Font("Serif", Font.BOLD,20);
     //test
@@ -81,7 +94,6 @@ public class MainPage extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.debugMode = debugMode;
-
         this.da = null;
 
        // this.setUndecorated(true);->ngilangin panel atas buat close
@@ -184,7 +196,13 @@ public class MainPage extends JFrame {
                 parentFrame.restartButton.setEnabled(true);
                 parentFrame.runButton.setEnabled(false);
                 //update graf
+                parentFrame.counter=0;
                 parentFrame.updateGraf();
+                parentFrame.selectModeLabel.setVisible(true);
+                parentFrame.resultModeButton.setVisible(true);
+                parentFrame.historyModeButton.setVisible(true);
+                parentFrame.historyModeButton.setEnabled(true);
+                parentFrame.stepHistory = da.getStepHistory();
             }
         }
         );
@@ -244,6 +262,134 @@ public class MainPage extends JFrame {
                 getFractionSize(frameHeight,2,40)
         );
         this.add(this.iterationsLabel);
+        //replayer
+        iterationLabel = new JLabel("");
+        MainPage parentFrame = MainPage.getInstance();
+        iterationLabel.setBounds(
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),11,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),30,40),
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),6,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),2,40)
+        );
+        iterationLabel.setFont(parentFrame.TITLE_FONT);
+        add(iterationLabel);
+        nextButton = new JButton("NEXT STEP");
+        nextButton.setBounds(
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),34,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),30,40),
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),5,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),2,40)
+        );
+        nextButton.setEnabled(false);
+        nextButton.setVisible(false);
+        nextButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                counter++;
+                if(counter>0){
+                    MainPage.getInstance().prevButton.setEnabled(true);
+                }
+                if(counter>=parentFrame.historyData.size()-1){
+                    MainPage.getInstance().nextButton.setEnabled(false);
+                }
+                parentFrame.iterationLabel.setText("Iterasi ke-"+parentFrame.counter);
+                parentFrame.visualizer.renderStepGraph(parentFrame.stepHistory,parentFrame.historyData,parentFrame.counter);
+            }
+        });
+        add(nextButton);
+        prevButton = new JButton("PREV STEP");
+        prevButton.setBounds(
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),34,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),33,40),
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),5,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),2,40)
+        );
+        prevButton.setEnabled(false);
+        prevButton.setVisible(false);
+        prevButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                counter--;
+                if(counter<=0){
+                    MainPage.getInstance().prevButton.setEnabled(false);
+                }
+                if(counter<parentFrame.historyData.size()-1){
+                    MainPage.getInstance().nextButton.setEnabled(true);
+                }
+                parentFrame.iterationLabel.setText("Iterasi ke-"+parentFrame.counter);
+                parentFrame.visualizer.renderStepGraph(parentFrame.stepHistory,parentFrame.historyData,parentFrame.counter);
+            }
+        });
+        add(prevButton);
+        //mode graf
+        //label
+        selectModeLabel = new JLabel("PILIH MODE GRAF:");
+        selectModeLabel.setFont(TITLE_FONT);
+        selectModeLabel.setBounds(getFractionSize(frameWidth,22,40),
+                getFractionSize(frameHeight,29.5,40),
+                getFractionSize(frameWidth,7,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        selectModeLabel.setVisible(false);
+        this.add(selectModeLabel);
+        //mode hasil
+        resultModeButton = new JButton("MODE HASIL");
+        resultModeButton.setEnabled(false);
+        resultModeButton.setBounds(getFractionSize(frameWidth,22,40),
+                getFractionSize(frameHeight,31.5,40),
+                getFractionSize(frameWidth,6,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        resultModeButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                parentFrame.nextButton.setVisible(false);
+                parentFrame.nextButton.setEnabled(false);
+                parentFrame.prevButton.setVisible(false);
+                parentFrame.prevButton.setEnabled(false);
+                iterationLabel.setText("");
+                parentFrame.resultModeButton.setEnabled(false);
+                parentFrame.historyModeButton.setEnabled(true);
+                parentFrame.visualizer.resetGraphValue();
+                parentFrame.updateGraf();
+                parentFrame.visualizer.updateStartEndNode(parentFrame.getStartNode(),parentFrame.getEndNode());
+            }
+        });
+        resultModeButton.setVisible(false);
+        add(resultModeButton);
+        //mode step
+        historyModeButton = new JButton("MODE STEP ALGORITMA");
+        historyModeButton.setEnabled(false);
+        historyModeButton.setBounds(getFractionSize(frameWidth,22,40),
+                getFractionSize(frameHeight,34,40),
+                getFractionSize(frameWidth,6,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        historyModeButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                parentFrame.historyModeButton.setEnabled(false);
+                parentFrame.resultModeButton.setEnabled(true);
+                iterationLabel.setText("Iterasi ke-"+parentFrame.counter);
+                if(counter<parentFrame.historyData.size()-1) {
+                    parentFrame.nextButton.setEnabled(true);
+                }
+                else{
+                    parentFrame.nextButton.setEnabled(false);
+                }
+                parentFrame.nextButton.setVisible(true);
+                if(counter<=0){
+                    parentFrame.prevButton.setEnabled(false);
+                }
+                else {
+                    parentFrame.prevButton.setEnabled(true);
+                }
+                parentFrame.prevButton.setVisible(true);
+                parentFrame.visualizer.resetGraph();
+                parentFrame.visualizer.renderStepGraph(parentFrame.stepHistory,parentFrame.historyData,parentFrame.counter);
+            }
+
+        });
+        historyModeButton.setVisible(false);
+        add(historyModeButton);
     }
     public int getFractionSize(double base,double pembilang,double penyebut){
         return (int)(base*((1.0*pembilang)/penyebut));
@@ -319,11 +465,16 @@ public class MainPage extends JFrame {
     }
     public void updateGraf(){
         //hapus elemen pertama sama terakhir
-        String startNode = this.solusi.removeFirst();
-        String endNode = this.solusi.removeLast();
+        temp = new LinkedList<>();
+        for(String s:solusi){
+            temp.addLast(s);
+        }
+        String startNode = temp.removeFirst();
+        String endNode = temp.removeLast();
+
         //ganti warna elemen antara
         mxCell cell;
-        for(String nama:solusi){
+        for(String nama:temp){
             cell = visualizer.getVertex(nama);
             this.visualizer.updateCell(new Object[]{cell},"ffff00","1A1AFF");//kuning
         }
@@ -331,20 +482,23 @@ public class MainPage extends JFrame {
         //ganti untuk yang ngubungin startNode sama node selanjutnya
 
         //inisialisasi array
-        Object[] highlitedPath = new Object[solusi.size()+1];
-        //System.out.println("aaa:"+startNode+solusi.getFirst());
-        if(solusi.size()>0) {
-            highlitedPath[0] = this.visualizer.getEdge(startNode, solusi.getFirst());
-            highlitedPath[solusi.size()] = this.visualizer.getEdge(solusi.getLast(), endNode);
+        Object[] highlitedPath = new Object[temp.size()+1];
+        //System.out.println("aaa:"+startNode+temp.getFirst());
+        String current;
+        String next;
+        if(temp.size()>0) {
+            highlitedPath[0] = this.visualizer.getEdge(startNode, temp.getFirst());
+            highlitedPath[temp.size()] = this.visualizer.getEdge(temp.getLast(), endNode);
 
-            int size = solusi.size() - 1;
-            String current = solusi.size() > 0 ? this.solusi.removeFirst() : null;
-            String next = solusi.size() > 0 ? this.solusi.removeFirst() : null;
+            int size = temp.size() - 1;
+
+            current = temp.size()>0? temp.removeFirst():null;
+            next = temp.size()>0? temp.removeFirst():null;
             for (int i = 0; i < size; i++) {
                 if (current != null && next != null)
                     highlitedPath[i + 1] = this.visualizer.getEdge(current, next);
                 current = next;
-                next = solusi.size() > 0 ? this.solusi.removeFirst() : null;
+                next = temp.size() > 0 ? temp.removeFirst() : null;
             }
         }
         else{
@@ -362,8 +516,9 @@ public class MainPage extends JFrame {
         restartButton.setEnabled(false);
         solusi = null;
         historyData=null;
+        temp = null;
+        stepHistory = null;
     }
-
 }
 
 

@@ -16,10 +16,13 @@ public class DjikstraAlgorithm {
     private long endTime;
     private PriorityQueue<Nodes> pq;
     private Map<String,Map<String,Double>> valueHistory;
+    private Deque<String> iterationStep;
     public DjikstraAlgorithm(SimpleWeightedGraph<String, EdgeAdaptor> graph){
         this.graph = graph;
         this.startTime = System.nanoTime();
         this.valueHistory = new HashMap<>();
+        this.iterationStep = new LinkedList<String>();
+        iterationStep.addLast("INITIAL_STATE");
     }
     public Deque<String> solve(String startNode, String endNode){
         setupTable(startNode);
@@ -53,6 +56,8 @@ public class DjikstraAlgorithm {
         Nodes curNode;
         //isi prio queue isi node node
         pq = new PriorityQueue<Nodes>(nodeSet.size(),new NodesComparator());
+        //tambahkan kondisi awal ke rekap historis
+        this.valueHistory.put("INITIAL_STATE",new HashMap<>());
         for(String node:nodeSet){
             /*
             System.out.println("Start node:"+startNode+",Sekarang:"+node);
@@ -68,19 +73,23 @@ public class DjikstraAlgorithm {
                 System.out.println("Start nodenyaL:"+node);
                 //node awal dikasih nilai 0
                 pq.add(new Nodes(node,0f));
+                this.valueHistory.get("INITIAL_STATE").put(node,new Double(0f));
             }
             else{
                 pq.add(new Nodes(node,Double.POSITIVE_INFINITY));
+                this.valueHistory.get("INITIAL_STATE").put(node,Double.POSITIVE_INFINITY);
             }
             distanceMap.put(node,null);
-        }
-        //tambahkan kondisi awal ke rekap historis
-        this.valueHistory.put("INITIAL_STATE",new HashMap<>());
-        for(Nodes node:pq){
-            this.valueHistory.get("INITIAL_STATE").put(node.nodeName,node.shortestDistance);
+
         }
         //iterasi algoritma djikstra
+        Map<String,Double> records= valueHistory.get("INITIAL_STATE");
         while(nodeSet.size()>0){
+            //klon hashset yang awal
+            this.valueHistory.put(selectedNode,new HashMap<>());
+            for(String key:records.keySet()){
+                valueHistory.get(selectedNode).put(key,records.get(key));
+            }
             neighborList = Graphs.neighborListOf(this.graph,selectedNode);
             for(String neighbor:neighborList){
                 if(nodeSet.contains(neighbor)) {
@@ -96,7 +105,8 @@ public class DjikstraAlgorithm {
                     }
                 }
             }
-            this.valueHistory.put(selectedNode,new HashMap<>());
+            iterationStep.addLast(selectedNode);
+
             for(Nodes node:pq){
                 this.valueHistory.get(selectedNode).put(node.nodeName,node.shortestDistance);
             }
@@ -163,6 +173,9 @@ public class DjikstraAlgorithm {
     }
     public Map<String,Map<String,Double>> getHistory(){
         return valueHistory;
+    }
+    public Deque<String> getStepHistory(){
+        return iterationStep;
     }
 
 }
