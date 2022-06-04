@@ -19,6 +19,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.File;
 import java.util.Deque;
+import java.util.Map;
 
 public class MainPage extends JFrame {
     private SimpleWeightedGraph<String, EdgeAdaptor> graph;
@@ -32,6 +33,7 @@ public class MainPage extends JFrame {
     private JLabel iterationsLabel;
     private JButton uploadButton;
     public JButton runButton;
+    public JButton restartButton;
     private static final Dimension DEFAULT_SIZE = new Dimension(530, 600);
     private GridBagConstraints gbc;
     private static MainPage parentFrame;
@@ -43,8 +45,9 @@ public class MainPage extends JFrame {
     Deque<String> solusi;
     String startNode;
     String endNode;
+    public Map<String, Map<String,Double>> historyData;
 
-    private static final Font TITLE_FONT = new Font("Serif", Font.BOLD,20);
+    public static final Font TITLE_FONT = new Font("Serif", Font.BOLD,20);
     //test
     //private mxIGraphLayout layout;
     //mxGraphComponent component;
@@ -129,6 +132,7 @@ public class MainPage extends JFrame {
                             getFractionSize(frameWidth,28,40),
                             getFractionSize(frameHeight,28,40)
                     );
+                    parentFrame.resetMap();
                 }
             }
         }
@@ -174,8 +178,11 @@ public class MainPage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 parentFrame.da = new DjikstraAlgorithm(parentFrame.graph);
                 parentFrame.solusi = da.solve(startNode,endNode);
+                parentFrame.historyData = da.getHistory();
                 parentFrame.runtimeLabel.setText("Total Waktu: "+da.getTime());
                 parentFrame.iterationsLabel.setText("Jumlah Iterasi: "+da.getIterations());
+                parentFrame.restartButton.setEnabled(true);
+                parentFrame.runButton.setEnabled(false);
                 //update graf
                 parentFrame.updateGraf();
             }
@@ -191,12 +198,32 @@ public class MainPage extends JFrame {
             this.runButton.setEnabled(false);
         }
         add(runButton);
+        //tombol restart
+        restartButton = new JButton("RESTART");
+        restartButton.setBounds(
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),1,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),10.5,40),
+                parentFrame.getFractionSize(parentFrame.getFrameWidth(),5,40),
+                parentFrame.getFractionSize(parentFrame.getFrameHeight(),2,40)
+        );
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parentFrame.visualizer.resetGraph();
+                parentFrame.resetMap();
+            }
+        });
+        //cek apakah sudah di run
+        if(solusi==null){
+            restartButton.setEnabled(false);
+        }
+        add(restartButton);
         //analisis
         //label
         this.analysisLabel = new JLabel("RUNTIME STATISTIC");
         this.analysisLabel.setFont(TITLE_FONT);
         this.analysisLabel.setBounds(getFractionSize(frameWidth,0.6,40),
-                getFractionSize(frameHeight,11,40),
+                getFractionSize(frameHeight,13,40),
                 getFractionSize(frameWidth,7,40),
                 getFractionSize(frameHeight,2,40)
         );
@@ -204,7 +231,7 @@ public class MainPage extends JFrame {
         //waktu pengerjaan
         this.runtimeLabel = new JLabel("Total Waktu:");
         this.runtimeLabel.setBounds(getFractionSize(frameWidth,1,40),
-                getFractionSize(frameHeight,12,40),
+                getFractionSize(frameHeight,15,40),
                 getFractionSize(frameWidth,7,40),
                 getFractionSize(frameHeight,2,40)
         );
@@ -212,7 +239,7 @@ public class MainPage extends JFrame {
         //jumlah iterasi
         this.iterationsLabel = new JLabel("Jumlah Iterasi:");
         this.iterationsLabel.setBounds(getFractionSize(frameWidth,1,40),
-                getFractionSize(frameHeight,13,40),
+                getFractionSize(frameHeight,17,40),
                 getFractionSize(frameWidth,7,40),
                 getFractionSize(frameHeight,2,40)
         );
@@ -282,16 +309,6 @@ public class MainPage extends JFrame {
         this.graph = new SimpleWeightedGraph<String, EdgeAdaptor>(EdgeAdaptor.class);
         this.visualizer = new Visualizer(graph);
         //test
-        /*
-        File selectedFile = new File("test/test0.txt");
-        Parser parser = new Parser(selectedFile);
-        parentFrame.graph = parser.parse();
-        jgxAdapter = new JGraphXAdapter<>(this.graph);
-        component = new mxGraphComponent(jgxAdapter);
-        layout = new mxCircleLayout(jgxAdapter);
-        layout.execute(jgxAdapter.getDefaultParent());
-        */
-        //
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -336,7 +353,16 @@ public class MainPage extends JFrame {
         }
         this.visualizer.updateEdge(highlitedPath,"ffff00","00ff00");
     }
-
+    public void resetMap(){
+        this.startNode = null;
+        this.endNode = null;
+        runtimeLabel.setText("Total Waktu:");
+        iterationsLabel.setText("Jumlah Iterasi:");
+        runButton.setEnabled(false);
+        restartButton.setEnabled(false);
+        solusi = null;
+        historyData=null;
+    }
 
 }
 

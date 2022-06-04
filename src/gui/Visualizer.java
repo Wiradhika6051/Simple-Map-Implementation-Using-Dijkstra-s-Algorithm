@@ -44,6 +44,32 @@ public class Visualizer extends JPanel {
         generateLocationMatrix();
         fillLocationMatrix();
     }
+    public void resetGraph(){
+        jgxAdapter.getModel().beginUpdate();
+        try {
+            jgxAdapter.clearSelection();
+            jgxAdapter.selectAll();
+            Object[] cells = jgxAdapter.getSelectionCells();
+            Object[] edges = jgxAdapter.getAllEdges(cells);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "f0f0f0", edges);//warna edge
+            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"D7B698",edges);
+            for(Object c:cells) {
+                mxCell cell = (mxCell) c;
+                mxGeometry geometry = cell.getGeometry();
+                if (cell.isVertex()) {
+                    geometry.setWidth(60);
+                    geometry.setHeight(60);
+                    //cell.setStyle("ROUNDED");
+                    jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"774300",new Object[]{cell});
+                    jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR, "f0f0f0", new Object[]{cell});
+                }
+            }
+        }
+        finally{
+            jgxAdapter.getModel().endUpdate();
+        }
+    }
+
     void generateLocationMatrix(){
         this.arraySize = (int)Math.ceil(Math.sqrt(this.graph.vertexSet().size()));
         this.locationMatrix = new String[arraySize][arraySize];
@@ -358,25 +384,23 @@ public class Visualizer extends JPanel {
            // style_e.put(mxConstants.STYLE_SHAPE,mxConstants.);
             stylesheet.putCellStyle("LINE EDGE",style_e);
             //layout.setForceConstant(150);
+            Object[] edges = jgxAdapter.getAllEdges(cells);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "f0f0f0", edges);//warna edge
+            jgxAdapter.setCellStyles(mxConstants.STYLE_STROKEWIDTH,Integer.toString(6),edges);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"D7B698",edges);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_ENDARROW,mxConstants.NONE,edges);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_TOP,edges);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION,mxConstants.ALIGN_BOTTOM,edges);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTSIZE,Integer.toString(15),edges);
             for(Object c:cells){
                 mxCell cell = (mxCell) c;
                 mxGeometry geometry = cell.getGeometry();
-                Object[] edges = jgxAdapter.getAllEdges(cells);
-                jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "f0f0f0", edges);//warna edge
-                jgxAdapter.setCellStyles(mxConstants.STYLE_STROKEWIDTH,Integer.toString(6),edges);
-                jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"D7B698",edges);
-                jgxAdapter.setCellStyles(mxConstants.STYLE_ENDARROW,mxConstants.NONE,edges);
-                jgxAdapter.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_TOP,edges);
-                jgxAdapter.setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION,mxConstants.ALIGN_BOTTOM,edges);
-                jgxAdapter.setCellStyles(mxConstants.STYLE_FONTSIZE,Integer.toString(15),edges);
                 if(cell.isVertex()){
                     geometry.setWidth(60);
                     geometry.setHeight(60);
                     //cell.setStyle("ROUNDED");
                     jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});
                     jgxAdapter.setCellStyles(mxConstants.STYLE_SHAPE,mxConstants.SHAPE_ELLIPSE,new Object[]{cell});
-
-
                 }
                 else if(cell.isEdge()){
                  //   cell.setStyle("LINE EDGE");

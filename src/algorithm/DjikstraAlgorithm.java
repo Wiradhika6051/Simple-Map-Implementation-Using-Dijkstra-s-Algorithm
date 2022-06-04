@@ -15,9 +15,11 @@ public class DjikstraAlgorithm {
     private long startTime;
     private long endTime;
     private PriorityQueue<Nodes> pq;
+    private Map<String,Map<String,Double>> valueHistory;
     public DjikstraAlgorithm(SimpleWeightedGraph<String, EdgeAdaptor> graph){
         this.graph = graph;
         this.startTime = System.nanoTime();
+        this.valueHistory = new HashMap<>();
     }
     public Deque<String> solve(String startNode, String endNode){
         setupTable(startNode);
@@ -72,6 +74,11 @@ public class DjikstraAlgorithm {
             }
             distanceMap.put(node,null);
         }
+        //tambahkan kondisi awal ke rekap historis
+        this.valueHistory.put("INITIAL_STATE",new HashMap<>());
+        for(Nodes node:pq){
+            this.valueHistory.get("INITIAL_STATE").put(node.nodeName,node.shortestDistance);
+        }
         //iterasi algoritma djikstra
         while(nodeSet.size()>0){
             neighborList = Graphs.neighborListOf(this.graph,selectedNode);
@@ -88,6 +95,10 @@ public class DjikstraAlgorithm {
                         distanceMap.put(neighbor, selectedNode);
                     }
                 }
+            }
+            this.valueHistory.put(selectedNode,new HashMap<>());
+            for(Nodes node:pq){
+                this.valueHistory.get(selectedNode).put(node.nodeName,node.shortestDistance);
             }
             iteration++;
             nodeSet.remove(selectedNode);
@@ -149,6 +160,9 @@ public class DjikstraAlgorithm {
             }
         }
         return smallest;
+    }
+    public Map<String,Map<String,Double>> getHistory(){
+        return valueHistory;
     }
 
 }
