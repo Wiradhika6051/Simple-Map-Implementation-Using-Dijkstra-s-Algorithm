@@ -56,6 +56,12 @@ public class MainPage extends JFrame {
         this.startNode = name;
         System.out.println(startNode);
     }
+    public int getFrameWidth(){
+        return frameWidth;
+    }
+    public int getFrameHeight(){
+        return frameHeight;
+    }
     public String getStartNode(){
         return startNode;
     }
@@ -212,7 +218,7 @@ public class MainPage extends JFrame {
         );
         this.add(this.iterationsLabel);
     }
-    private int getFractionSize(double base,double pembilang,double penyebut){
+    public int getFractionSize(double base,double pembilang,double penyebut){
         return (int)(base*((1.0*pembilang)/penyebut));
     }
     private void showAxis(){
@@ -309,19 +315,26 @@ public class MainPage extends JFrame {
 
         //inisialisasi array
         Object[] highlitedPath = new Object[solusi.size()+1];
-        highlitedPath[0] = this.visualizer.getEdge(startNode,solusi.getFirst());
-        highlitedPath[solusi.size()] = this.visualizer.getEdge(solusi.getLast(),endNode);
+        //System.out.println("aaa:"+startNode+solusi.getFirst());
+        if(solusi.size()>0) {
+            highlitedPath[0] = this.visualizer.getEdge(startNode, solusi.getFirst());
+            highlitedPath[solusi.size()] = this.visualizer.getEdge(solusi.getLast(), endNode);
 
-        int size = solusi.size()-1;
-        String current = solusi.size()>0? this.solusi.removeFirst():null;
-        String next = solusi.size()>0? this.solusi.removeFirst():null;
-        for(int i=0;i<size;i++){
-            if(current!=null && next!=null)
-                highlitedPath[i] = this.visualizer.getEdge(current,next);
-            current = next;
-            next = solusi.size()>0? this.solusi.removeFirst():null;
+            int size = solusi.size() - 1;
+            String current = solusi.size() > 0 ? this.solusi.removeFirst() : null;
+            String next = solusi.size() > 0 ? this.solusi.removeFirst() : null;
+            for (int i = 0; i < size; i++) {
+                if (current != null && next != null)
+                    highlitedPath[i + 1] = this.visualizer.getEdge(current, next);
+                current = next;
+                next = solusi.size() > 0 ? this.solusi.removeFirst() : null;
+            }
         }
-        this.visualizer.updateEdge(highlitedPath,"ffff00");
+        else{
+            //gak ada node antara
+            highlitedPath[0] = this.visualizer.getEdge(startNode, endNode);
+        }
+        this.visualizer.updateEdge(highlitedPath,"ffff00","00ff00");
     }
 
 

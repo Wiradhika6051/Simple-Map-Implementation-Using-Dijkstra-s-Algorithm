@@ -5,10 +5,7 @@ import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource;
+import com.mxgraph.util.*;
 import com.mxgraph.view.mxGraphSelectionModel;
 import com.mxgraph.view.mxStylesheet;
 import org.jgrapht.*;
@@ -243,6 +240,14 @@ public class Visualizer extends JPanel {
         component.setBorder(BorderFactory.createEmptyBorder());
         component.setDragEnabled(false);
         component.setAutoExtend(true);
+        component.getVerticalScrollBar().setVisible(true);
+        component.getHorizontalScrollBar().setVisible(true);
+        jgxAdapter.setMinimumGraphSize(new mxRectangle(
+                MainPage.getInstance().getFractionSize(MainPage.getInstance().getFrameWidth(),11,40),
+                MainPage.getInstance().getFractionSize(MainPage.getInstance().getFrameHeight(),1,40),
+                MainPage.getInstance().getFractionSize(MainPage.getInstance().getFrameWidth(),28,40),
+                MainPage.getInstance().getFractionSize(MainPage.getInstance().getFrameHeight(),28,40)
+        ));
         component.getGraphControl().addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -325,6 +330,7 @@ public class Visualizer extends JPanel {
                 new mxGeometry(0, panelHeight/10,
                         panelWidth, panelHeight)
         );
+
         //layout.setX0(panelUpperBorder);
         //layout.setY0(panelLeftBorder);
         jgxAdapter.getModel().beginUpdate();
@@ -345,6 +351,8 @@ public class Visualizer extends JPanel {
             jgxAdapter.setCellsBendable(false);
             jgxAdapter.setCellsDeletable(false);
             jgxAdapter.setCellsLocked(false);
+            jgxAdapter.setCellsEditable(false);
+            //jgxAdapter.set
             //shape edges
             Hashtable<String,Object> style_e = new Hashtable<>();
            // style_e.put(mxConstants.STYLE_SHAPE,mxConstants.);
@@ -353,7 +361,14 @@ public class Visualizer extends JPanel {
             for(Object c:cells){
                 mxCell cell = (mxCell) c;
                 mxGeometry geometry = cell.getGeometry();
-
+                Object[] edges = jgxAdapter.getAllEdges(cells);
+                jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "f0f0f0", edges);//warna edge
+                jgxAdapter.setCellStyles(mxConstants.STYLE_STROKEWIDTH,Integer.toString(6),edges);
+                jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"D7B698",edges);
+                jgxAdapter.setCellStyles(mxConstants.STYLE_ENDARROW,mxConstants.NONE,edges);
+                jgxAdapter.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN,mxConstants.ALIGN_TOP,edges);
+                jgxAdapter.setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION,mxConstants.ALIGN_BOTTOM,edges);
+                jgxAdapter.setCellStyles(mxConstants.STYLE_FONTSIZE,Integer.toString(15),edges);
                 if(cell.isVertex()){
                     geometry.setWidth(60);
                     geometry.setHeight(60);
@@ -398,8 +413,10 @@ public class Visualizer extends JPanel {
         jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,fontColor,cells);//fontcolor
         jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,color,cells);//bg
     }
-    public void updateEdge(Object[] edges,String color) {
+    public void updateEdge(Object[] edges,String color,String fontColor) {
         jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, color, edges);//warna edge
+        jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,fontColor,edges);//warna font edge
+
     }
     public Object getEdge(String startNode,String endNode){
         HashMap<EdgeAdaptor,com.mxgraph.model.mxICell> edgeToCellMap = jgxAdapter.getEdgeToCellMap();
