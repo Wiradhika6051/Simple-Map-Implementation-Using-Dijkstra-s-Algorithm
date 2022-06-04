@@ -33,6 +33,9 @@ Program simulasi peta menggunakan algoritma Djikstra ini merupakan sebuah progra
 4. Pilih simpul yang ingin dijadikan simpul asal dengan menekannya sampai warnanya menjadi biru. Jika tidak jadi memilihnya, tekan simpul itu sekali lagi hingga warnanya kembali menjadi abu-abu.
 5. Pilih simpul yang ingin dijadikan simpul tujuan dengan menekannya sampai warnanya menjadi hijau. Jika tidak jadi memilihnya, tekan simpul itu sekali lagi hingga warnanya kembali menjadi abu-abu.
 6. Tekan tombol `RUN` untuk menjalankan algoritma
-    
+7. Hasil akhir algoritma berupa path terpendek akan ditambilkan. Jalur yang dilewati akan diwarnai dengan warna kuning. Ditampilkan juga waktu eksekusi dan jumlah iterasi.
+8. Jika ingin mengulangi algoritma di peta yang sama namun simpulnya berbeda,tekan tombol `RESTART`. Lalu ulangi mulai langkah ke-4.
+9. Jika ingin melihat bobot tiap simpul langkah-per-langkah, pilih `MODE STEP ALGORITMA`. Lalu tekan `NEXT STEP` atau `PREV STEP` untuk bergeser ke iterasi sesudah atau sebelumnya. Simpul yang sedang diperiksa ditandai dengan warna merah.
+10. Jika ingin kembali ke mode melihat lintasan terpendek, tekan `MODE HASIL`
  ## Troubleshooting
 
