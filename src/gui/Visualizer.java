@@ -52,7 +52,7 @@ public class Visualizer extends JPanel {
             Object[] cells = jgxAdapter.getSelectionCells();
             Object[] edges = jgxAdapter.getAllEdges(cells);
             jgxAdapter.setCellStyles(mxConstants.STYLE_STROKECOLOR, "f0f0f0", edges);//warna edge
-            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"D7B698",edges);
+            jgxAdapter.setCellStyles(mxConstants.STYLE_FONTCOLOR,"D7B698",edges);//warna weight
             for(Object c:cells) {
                 mxCell cell = (mxCell) c;
                 mxGeometry geometry = cell.getGeometry();
@@ -488,6 +488,7 @@ public class Visualizer extends JPanel {
         resetGraphValue();
         Map<String,Double> record;
         //LinkedList<String> temp = (LinkedList<String>) histori_node.clone();
+        resetGraph();
         int idx=0;
         String key=null;
         if(histori_node==null){
@@ -506,6 +507,11 @@ public class Visualizer extends JPanel {
             System.out.println(node);
         }
         System.out.println("key"+key);
+        //warnain node yang diperiksa sebagai merah
+        if(!key.equals("INITIAL_STATE")){
+            mxCell keyCell = getVertex(key);
+            updateCell(new Object[]{keyCell},"ff0000","55E675");
+        }
         record = it_his.get(key);
         if(record==null){
             System.out.println("napa kosong dah?");

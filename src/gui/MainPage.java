@@ -200,6 +200,7 @@ public class MainPage extends JFrame {
                 parentFrame.updateGraf();
                 parentFrame.selectModeLabel.setVisible(true);
                 parentFrame.resultModeButton.setVisible(true);
+                parentFrame.resultModeButton.setEnabled(false);
                 parentFrame.historyModeButton.setVisible(true);
                 parentFrame.historyModeButton.setEnabled(true);
                 parentFrame.stepHistory = da.getStepHistory();
@@ -227,6 +228,7 @@ public class MainPage extends JFrame {
         restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 parentFrame.visualizer.resetGraph();
                 parentFrame.resetMap();
             }
@@ -292,7 +294,14 @@ public class MainPage extends JFrame {
                 if(counter>=parentFrame.historyData.size()-1){
                     MainPage.getInstance().nextButton.setEnabled(false);
                 }
-                parentFrame.iterationLabel.setText("Iterasi ke-"+parentFrame.counter);
+                String labelS;
+                if(parentFrame.counter==0){
+                    labelS = "Kondisi Awal";
+                }
+                else{
+                    labelS = "Iterasi ke-"+parentFrame.counter;
+                }
+                parentFrame.iterationLabel.setText(labelS);
                 parentFrame.visualizer.renderStepGraph(parentFrame.stepHistory,parentFrame.historyData,parentFrame.counter);
             }
         });
@@ -316,7 +325,14 @@ public class MainPage extends JFrame {
                 if(counter<parentFrame.historyData.size()-1){
                     MainPage.getInstance().nextButton.setEnabled(true);
                 }
-                parentFrame.iterationLabel.setText("Iterasi ke-"+parentFrame.counter);
+                String labelS;
+                if(parentFrame.counter==0){
+                    labelS = "Kondisi Awal";
+                }
+                else{
+                    labelS = "Iterasi ke-"+parentFrame.counter;
+                }
+                parentFrame.iterationLabel.setText(labelS);
                 parentFrame.visualizer.renderStepGraph(parentFrame.stepHistory,parentFrame.historyData,parentFrame.counter);
             }
         });
@@ -350,6 +366,7 @@ public class MainPage extends JFrame {
                 parentFrame.resultModeButton.setEnabled(false);
                 parentFrame.historyModeButton.setEnabled(true);
                 parentFrame.visualizer.resetGraphValue();
+                parentFrame.visualizer.resetGraph();
                 parentFrame.updateGraf();
                 parentFrame.visualizer.updateStartEndNode(parentFrame.getStartNode(),parentFrame.getEndNode());
             }
@@ -368,7 +385,14 @@ public class MainPage extends JFrame {
             public void actionPerformed(ActionEvent e){
                 parentFrame.historyModeButton.setEnabled(false);
                 parentFrame.resultModeButton.setEnabled(true);
-                iterationLabel.setText("Iterasi ke-"+parentFrame.counter);
+                String labelS;
+                if(parentFrame.counter==0){
+                    labelS = "Kondisi Awal";
+                }
+                else{
+                    labelS = "Iterasi ke-"+parentFrame.counter;
+                }
+                iterationLabel.setText(labelS);
                 if(counter<parentFrame.historyData.size()-1) {
                     parentFrame.nextButton.setEnabled(true);
                 }
@@ -518,6 +542,14 @@ public class MainPage extends JFrame {
         historyData=null;
         temp = null;
         stepHistory = null;
+        counter=0;
+        selectModeLabel.setVisible(false);
+        iterationLabel.setText("");
+        resultModeButton.setVisible(false);
+        historyModeButton.setVisible(false);
+        nextButton.setVisible(false);
+        prevButton.setVisible(false);
+        MainPage.getInstance().visualizer.resetGraphValue();
     }
 }
 
