@@ -46,6 +46,8 @@ public class MainPage extends JFrame {
     JButton resultModeButton;
     JButton historyModeButton;
 
+    public JLabel selectHint;
+
     private static final Dimension DEFAULT_SIZE = new Dimension(530, 600);
     private GridBagConstraints gbc;
     private static MainPage parentFrame;
@@ -145,6 +147,7 @@ public class MainPage extends JFrame {
                             getFractionSize(frameHeight,28,40)
                     );
                     parentFrame.resetMap();
+                    parentFrame.selectHint.setText("Pilih Start Vertex");
                 }
             }
         }
@@ -204,6 +207,7 @@ public class MainPage extends JFrame {
                 parentFrame.historyModeButton.setVisible(true);
                 parentFrame.historyModeButton.setEnabled(true);
                 parentFrame.stepHistory = da.getStepHistory();
+                parentFrame.selectHint.setText("");
             }
         }
         );
@@ -228,7 +232,7 @@ public class MainPage extends JFrame {
         restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                parentFrame.selectHint.setText("Pilih Start Vertex");
                 parentFrame.visualizer.resetGraph();
                 parentFrame.resetMap();
             }
@@ -414,6 +418,15 @@ public class MainPage extends JFrame {
         });
         historyModeButton.setVisible(false);
         add(historyModeButton);
+        //petunjuk untuk tekan
+        selectHint = new JLabel("Pilih file untuk dibaca!");
+        selectHint.setBounds(getFractionSize(frameWidth,1,40),
+                getFractionSize(frameHeight,23,40),
+                getFractionSize(frameWidth,7,40),
+                getFractionSize(frameHeight,2,40)
+        );
+        selectHint.setFont(TITLE_FONT);
+        add(selectHint);
     }
     public int getFractionSize(double base,double pembilang,double penyebut){
         return (int)(base*((1.0*pembilang)/penyebut));
@@ -434,59 +447,6 @@ public class MainPage extends JFrame {
             }
         }
     }
-    private void fillComponent() {
-       // this.judul = new JLabel("PATHFINDER D-2000");
-        //this.visualizer = new Visualizer(graph);
-        //baris 1
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-   //     this.add(judul, gbc);
-        //baris 2
-        //perintah upload
-        this.uploadLabel = new JLabel("Masukkan File->");
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        this.add(uploadLabel, gbc);
-        //tombol upload
-        this.uploadButton = new JButton("PILIH FILE");
-        this.uploadButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser("test/");
-                int result = fileChooser.showOpenDialog(parentFrame);
-                if(result==JFileChooser.APPROVE_OPTION){
-                    File selectedFile = fileChooser.getSelectedFile();
-                    Parser parser = new Parser(selectedFile);
-                    parentFrame.graph = parser.parse();
-                    parentFrame.fileName.setText(selectedFile.getName());
-                    parentFrame.visualizer.update(parentFrame.graph);
-                }
-            }
-        }
-        );
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        this.add(uploadButton, gbc);
-        //nama file
-        this.fileName = new JLabel("");
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        this.add(fileName, gbc);
-        //baris 3
-        //visualizer
-        this.graph = new SimpleWeightedGraph<String, EdgeAdaptor>(EdgeAdaptor.class);
-        this.visualizer = new Visualizer(graph);
-        //test
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth=3;
-        gbc.gridheight=3;
-        this.add(visualizer, gbc);
-
-    }
     public void updateGraf(){
         //hapus elemen pertama sama terakhir
         temp = new LinkedList<>();
@@ -503,7 +463,6 @@ public class MainPage extends JFrame {
             this.visualizer.updateCell(new Object[]{cell},"ffff00","1A1AFF");//kuning
         }
         //ganti warna edge nya
-        //ganti untuk yang ngubungin startNode sama node selanjutnya
 
         //inisialisasi array
         Object[] highlitedPath = new Object[temp.size()+1];

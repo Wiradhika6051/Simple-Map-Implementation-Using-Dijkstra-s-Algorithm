@@ -291,6 +291,7 @@ public class Visualizer extends JPanel {
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"0000ff",new Object[]{cell});// bg biru
                             MainPage.getInstance().setStartNode(cell.getValue().toString());
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                            MainPage.getInstance().selectHint.setText("Pilih End Vertex");
                         }
                         else if(isStartNodeSelected && !isEndNodeSelected && cell.getValue().toString().equals(startNode)){
                             //batal pilih start node
@@ -298,6 +299,7 @@ public class Visualizer extends JPanel {
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});//bg abu abu
                             MainPage.getInstance().setStartNode(null);
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                            MainPage.getInstance().selectHint.setText("Pilih Start Vertex");
                         }
                         else if(isStartNodeSelected&& !isEndNodeSelected && !cell.getValue().toString().equals(startNode)){
                             //pilih end node
@@ -305,6 +307,7 @@ public class Visualizer extends JPanel {
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"00ff00",new Object[]{cell});//bg hijau
                             MainPage.getInstance().setEndNode(cell.getValue().toString());
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                            MainPage.getInstance().selectHint.setText("Tekan Tombol Run");
                         }
                         else if(isStartNodeSelected&& isEndNodeSelected && cell.getValue().toString().equals(endNode)){
                             //batal pilih end node
@@ -312,6 +315,7 @@ public class Visualizer extends JPanel {
                             jgxAdapter.setCellStyles(mxConstants.STYLE_FILLCOLOR,"f0f0f0",new Object[]{cell});//bg abu abu
                             MainPage.getInstance().setEndNode(null);
                             System.out.println("sn:"+MainPage.getInstance().getStartNode()+" en:"+MainPage.getInstance().getEndNode());
+                            MainPage.getInstance().selectHint.setText("Pilih End Vertex");
                         }
                         //cek apakah startNode dan endNode nya dah ada, kalau ada aktifin run button
                         startNode = MainPage.getInstance().getStartNode();
