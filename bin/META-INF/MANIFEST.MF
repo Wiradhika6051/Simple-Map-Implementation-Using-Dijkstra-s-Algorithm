@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Main-Class: Main
+Class-Path: jgrapht-ext-0.9.0.jar jgrapht-core-0.9.0.jar jgraphx-2.0.0.1
+ .jar jgraph-5.13.0.0.jar jgrapht-core-1.5.1.jar jheaps-0.13.jar jgraphx
+ -4.2.2.jar
+

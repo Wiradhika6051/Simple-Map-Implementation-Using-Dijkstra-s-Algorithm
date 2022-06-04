@@ -7,5 +7,4 @@ public class EdgeAdaptor extends DefaultWeightedEdge {
     public String toString() {
         return String.valueOf(getWeight());
     }
-
 }

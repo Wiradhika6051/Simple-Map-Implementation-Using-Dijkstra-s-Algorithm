@@ -1,13 +1,7 @@
 package gui;
 
 import algorithm.DjikstraAlgorithm;
-import com.mxgraph.layout.mxCircleLayout;
-import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxConstants;
-import org.jgrapht.ext.JGraphXAdapter;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import utils.EdgeAdaptor;
 import utils.Parser;
@@ -16,8 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.File;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -26,7 +18,6 @@ import java.util.Map;
 public class MainPage extends JFrame {
     private SimpleWeightedGraph<String, EdgeAdaptor> graph;
     private Visualizer visualizer;
-    //private JLabel judul;
     private JLabel uploadLabel;
     private JLabel fileName;
     private JLabel analysisLabel;
@@ -63,16 +54,11 @@ public class MainPage extends JFrame {
     public Deque<String> stepHistory;
 
     public static final Font TITLE_FONT = new Font("Serif", Font.BOLD,20);
-    //test
-    //private mxIGraphLayout layout;
-    //mxGraphComponent component;
-    //private JGraphXAdapter<String, DefaultWeightedEdge> jgxAdapter;
     public static  MainPage getInstance(){
         return parentFrame;
     }
     public void setStartNode(String name){
         this.startNode = name;
-        System.out.println(startNode);
     }
     public int getFrameWidth(){
         return frameWidth;
@@ -85,13 +71,11 @@ public class MainPage extends JFrame {
     }
     public void setEndNode(String name){
         this.endNode = name;
-        System.out.println(endNode);
     }
     public String getEndNode(){
         return endNode;
     }
     public MainPage(boolean debugMode){
-       // this.setPreferredSize(DEFAULT_SIZE);
         this.setTitle("Pathfinder D-2000");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -100,21 +84,12 @@ public class MainPage extends JFrame {
 
        // this.setUndecorated(true);->ngilangin panel atas buat close
         this.setResizable(false);
-        //this.pack();
-        //this.setLayout(new GridBagLayout());
         this.setLayout(null);
-        this.gbc = new GridBagConstraints();
         parentFrame = this;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.frameWidth = (int)screenSize.getWidth();
         this.frameHeight = (int)screenSize.getHeight();
-        System.out.println(frameWidth+","+frameHeight);
         initComponent();
-
-      //  DjikstraAlgorithm da = new DjikstraAlgorithm(graph);
-      //  Deque<String> solusi = da.solve("A","C");
-      //  System.out.println("waktu pengerjaan"+da.getTime());
-      //  System.out.println("Jumlah iterasi:"+da.getIterations());
     }
     private void initComponent(){
         showAxis();
@@ -466,15 +441,12 @@ public class MainPage extends JFrame {
 
         //inisialisasi array
         Object[] highlitedPath = new Object[temp.size()+1];
-        //System.out.println("aaa:"+startNode+temp.getFirst());
         String current;
         String next;
         if(temp.size()>0) {
             highlitedPath[0] = this.visualizer.getEdge(startNode, temp.getFirst());
             highlitedPath[temp.size()] = this.visualizer.getEdge(temp.getLast(), endNode);
-
             int size = temp.size() - 1;
-
             current = temp.size()>0? temp.removeFirst():null;
             next = temp.size()>0? temp.removeFirst():null;
             for (int i = 0; i < size; i++) {

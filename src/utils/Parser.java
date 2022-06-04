@@ -1,15 +1,9 @@
 package utils;
-
-import org.jgrapht.Graph;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
-
 import java.io.*;
 
 public class Parser {
     private File file;
-
     public Parser(File file){
         this.file = file;
     }
@@ -23,8 +17,6 @@ public class Parser {
         SimpleWeightedGraph<String, EdgeAdaptor> g = new SimpleWeightedGraph<String, EdgeAdaptor>(EdgeAdaptor.class);
         EdgeAdaptor edge;
         try{
-           // file = new File("test/"+this.path);
-            //System.out.println("test/"+this.path);
             reader = new BufferedReader(new FileReader(this.file));
             do {
                 line = reader.readLine();
@@ -41,11 +33,9 @@ public class Parser {
                         }
                         if(nodeCount==-1){
                             nodeCount = tempConvert;
-                            System.out.println(nodeCount);
                         }
                         else if(edgeCount==-1){
                             edgeCount= tempConvert;
-                            System.out.println(edgeCount);
                         }
                         //isi node/graph tergantung yang barusan diisi, karena edge diisi terakhiran, ngeceknya mulai dari edge dulu
                         if(edgeCount>-1){
@@ -64,7 +54,6 @@ public class Parser {
                                 }
                                 //tokennya sudah 3
                                 //add edge
-                                System.out.println(token[0]+","+token[1]+","+token[2]);
                                 edge = g.addEdge(token[0],token[1]);
                                 //set weight
                                 Double weight = Double.parseDouble(token[2]);
@@ -89,24 +78,19 @@ public class Parser {
                                 }
                                 //add node
                                 g.addVertex(token[0]);
-                                System.out.println(token[0]);
                             }
                         }
                     }
                 }
             }while(line!=null);
-            System.out.println("lewatkah?");
         }
         catch(IOException ioe){
             System.out.println("File kosong!");
-            System.out.println("ehe matamu2!?");
         }
         catch(NumberFormatException nfe){
-            System.out.println("ehe matamu1!?");
             System.out.println("Jumlah node/edge yang didefinisikan tidak sama dengan daftar node dan edge yang ada");
         }
         catch(Exception e){
-            System.out.println("ehe matamu!?");
             System.out.println(e.getMessage());
         }
         return g;
