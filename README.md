@@ -10,7 +10,6 @@ Sebuah program simulasi map dengan algoritma Djikstra
 1. [Deskripsi Singkat](#deskripsi-singkat)
 2. [Requirement dan Instalasi](#requirement-dan-instalasi)
 3. [Cara Penggunaan](#cara-penggunaan)
-   - [Troubleshooting](#troubleshooting)
 
 # Deskripsi Singkat
 Program simulasi peta menggunakan algoritma Djikstra ini merupakan sebuah program yang menyimulasikan fungsionalitas pencarian jarak terdekat pada aplikasi Map. Pengguna bisa memasukkan peta, memilih titik mana yang ingin dicari jarak terdekatnya, serta bobot langkah-per-langkah tiap simpul saat algoritma ini bekerja. Program ini sata beri nama Pathfinder D-2000 karena seperti namanya berguna untuk mencari jalan (*pathfinding*). D di namanya singkatan dari Djikstra, yakni nama algoritma yang digunakan sekaligus nama penemunya. Angka 2000 hanyalah tambahan saja supaya terdengar keren saja 😎😎.
@@ -37,5 +36,3 @@ Program simulasi peta menggunakan algoritma Djikstra ini merupakan sebuah progra
 8. Jika ingin mengulangi algoritma di peta yang sama namun simpulnya berbeda,tekan tombol `RESTART`. Lalu ulangi mulai langkah ke-4.
 9. Jika ingin melihat bobot tiap simpul langkah-per-langkah, pilih `MODE STEP ALGORITMA`. Lalu tekan `NEXT STEP` atau `PREV STEP` untuk bergeser ke iterasi sesudah atau sebelumnya. Simpul yang sedang diperiksa ditandai dengan warna merah.
 10. Jika ingin kembali ke mode melihat lintasan terpendek, tekan `MODE HASIL`
- ## Troubleshooting
-
