@@ -1,4 +1,4 @@
-# format nama file: harus txt, boleh ada spasi, gak boleh diawali #
+# format nama file: harus txt, tidak boleh ada spasi, gak boleh diawali #
 # tulis jumlah node
 3
 # list nama node, tidak boleh ada spasi
